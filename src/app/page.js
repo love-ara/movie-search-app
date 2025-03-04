@@ -1,101 +1,150 @@
+'use client'
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fetchMovieDetails } from '@/lib/api';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default function MovieDetailsPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { id } = params;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadMovieDetails = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchMovieDetails(id);
+        setDetails(data);
+      } catch (err) {
+        console.error('Error fetching movie details:', err);
+        setError('Failed to load movie details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      loadMovieDetails();
+    }
+  }, [id]);
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
+  if (loading) {
+    return (
+        <div className="flex justify-center items-center min-h-screen">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    );
+  }
+
+  if (error) {
+    return (
+        <div className="max-w-4xl mx-auto p-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
+            <p>{error}</p>
+          </div>
+          <Button
+              onClick={handleGoBack}
+              className="mt-4 flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to search
+          </Button>
+        </div>
+    );
+  }
+
+  if (!details) {
+    return null;
+  }
+
+  return (
+      <div className="max-w-4xl mx-auto p-6">
+        <Button
+            onClick={handleGoBack}
+            variant="outline"
+            className="mb-6 flex items-center gap-2"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <ArrowLeft className="h-4 w-4" />
+          Back to search
+        </Button>
+
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="md:flex">
+            <div className="md:w-1/3">
+              {details.Poster && details.Poster !== 'N/A' ? (
+                  <Image
+                      src={details.Poster}
+                      width={500}
+                      height={750}
+                      alt={`${details.Title} poster`}
+                      className="w-full h-auto"
+                  />
+              ) : (
+                  <div className="w-full h-full min-h-64 bg-muted flex items-center justify-center">
+                    <p>No poster available</p>
+                  </div>
+              )}
+            </div>
+            <div className="md:w-2/3 p-6">
+              <h1 className="text-3xl font-bold mb-2">{details.Title}</h1>
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <p className="text-gray-600">{details.Year}</p>
+                <span className="text-gray-600">•</span>
+                <p className="text-gray-600">{details.Runtime}</p>
+                <span className="text-gray-600">•</span>
+                <p className="text-gray-600">{details.Rated}</p>
+              </div>
+
+              <div className="flex flex-wrap gap-1 mb-4">
+                {details.Genre.split(', ').map((genre) => (
+                    <Badge key={genre} variant="secondary">
+                      {genre}
+                    </Badge>
+                ))}
+              </div>
+
+              <div className="mb-4">
+                <p className="font-semibold text-lg mb-1">Rating</p>
+                <p className="mb-3">{details.imdbRating}/10 IMDb</p>
+              </div>
+
+              <div className="mb-4">
+                <p className="font-semibold text-lg mb-1">Plot</p>
+                <p className="text-gray-700">{details.Plot}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div>
+                  <p className="font-semibold mb-1">Director</p>
+                  <p className="text-gray-700">{details.Director}</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Writer</p>
+                  <p className="text-gray-700">{details.Writer}</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Actors</p>
+                  <p className="text-gray-700">{details.Actors}</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Released</p>
+                  <p className="text-gray-700">{details.Released}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   );
 }
