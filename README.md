@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Movie Search App
+
+A simple React/Next.js application that allows users to search for movies using the OMDb API.
+
+## Features
+
+- Search for movies by title
+- Display movie details including title, poster, release date, and rating
+- Responsive design
+- Loading states and error handling
+
+## Screenshots!
+![](public/screenshot.png)
+
+
+## Technologies Used
+
+- Next.js
+- React
+- Tailwind CSS
+- Axios
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+- Node.js (v14.x or later)
+- npm or yarn
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/movie-search-app.git
+   cd movie-search-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Get an API key from [OMDb API](https://www.omdbapi.com/apikey.aspx)
+
+4. Create a `.env.local` file in the root directory and add your API key:
+   ```
+   NEXT_PUBLIC_OMDB_API_KEY=your_api_key_here
+   ```
+
+5. Update the API key in the code:
+   Open `pages/index.js` and replace `'YOUR_OMDB_API_KEY'` with:
+   ```javascript
+   const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;
+   ```
+
+6. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+7. Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
+
+## Building for Production
 
 ```bash
-npm run dev
+npm run build
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then start the production server:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm start
+# or
+yarn start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+The easiest way to deploy this app is using [Vercel](https://vercel.com/), the platform built by the creators of Next.js:
 
-To learn more about Next.js, take a look at the following resources:
+1. Push your code to a GitHub repository
+2. Import the project into Vercel
+3. Add your environment variables
+4. Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Future Improvements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Add pagination for search results
+- Implement a favorites feature
+- Add more detailed movie information
+- Enhance the UI with animations
+- Deployed
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
